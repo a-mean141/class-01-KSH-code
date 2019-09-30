@@ -33,6 +33,6 @@ while (lower <= upper):
 ts = time.time() - ts
 print("target index %d time %.6f" %(idx, ts))
 ts = time.time()
-idx = recursive_binray_search(arr, target, 0, len(arr))
+idx = recursive_binray_search(arr, target, 0, len(arr) - 1)
 ts = time.time() - ts
 print("target index %d time %.6f" %(idx, ts))
