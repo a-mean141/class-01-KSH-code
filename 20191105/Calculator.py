@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QLineEdit, QToolButton
 from PyQt5.QtWidgets import QSizePolicy
 from PyQt5.QtWidgets import QLayout, QGridLayout
 from keypad import *
+from calcFunctions import *
 
 
 class Button(QToolButton):
@@ -40,7 +41,7 @@ class Calculator(QWidget):
             'num': {'buttons':numPadList, 'layout': numLayout, 'columns': 3},
             'op': {'buttons': operatorList, 'layout': opLayout, 'columns': 2},
             'constants': {'buttons': constantList, 'layout': constLayout, 'columns': 1},
-            'functions': {'buttons': functionList, 'layout': funcLayout, 'columns': 1}
+            'functions': {'buttons': functionLabels, 'layout': funcLayout, 'columns': 1}
         }
 
         for label in buttonGroups.keys():
@@ -55,20 +56,20 @@ class Calculator(QWidget):
                     r += 1
 
         # Layout
-        self.mainLayout = QGridLayout()
-        self.mainLayout.setSizeConstraint(QLayout.SetFixedSize)
+        mainLayout = QGridLayout()
+        mainLayout.setSizeConstraint(QLayout.SetFixedSize)
 
-        self.mainLayout.addWidget(self.display, 0, 0, 1, 2)
+        mainLayout.addWidget(self.display, 0, 0, 1, 2)
 
-        self.mainLayout.addLayout(numLayout, 1, 0)
+        mainLayout.addLayout(numLayout, 1, 0)
 
-        self.mainLayout.addLayout(opLayout, 1, 1)
+        mainLayout.addLayout(opLayout, 1, 1)
 
-        self.mainLayout.addLayout(constLayout, 2, 0)
+        mainLayout.addLayout(constLayout, 2, 0)
 
-        self.mainLayout.addLayout(funcLayout, 2, 1)
+        mainLayout.addLayout(funcLayout, 2, 1)
 
-        self.setLayout(self.mainLayout)
+        self.setLayout(mainLayout)
 
         self.setWindowTitle("My Calculator")
 
@@ -81,7 +82,6 @@ class Calculator(QWidget):
 
         if self.display.text() in errorList:
             self.display.setText('')  # after error
-
 
         if key == 'pi':
             key = '3.141592'
@@ -112,9 +112,13 @@ class Calculator(QWidget):
             self.display.setText(result)
         elif key == 'C':
             self.display.setText('')
+        elif key in functionLabels:
+            index = functionLabels.index(key)
+            value = eval("%s(%s)" %(functions[index], self.display.text()))
+            self.display.setText(str(value))
         else:
             self.display.setText(self.display.text() + key)
-        self.display.repaint()
+        self.repaint()
 
 
 if __name__ == '__main__':
