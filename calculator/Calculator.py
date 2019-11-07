@@ -1,10 +1,9 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QWidget
-from PyQt5.QtWidgets import QLineEdit, QToolButton
+from PyQt5.QtWidgets import QLineEdit, QToolButton, QMessageBox
 from PyQt5.QtWidgets import QSizePolicy
 from PyQt5.QtWidgets import QLayout, QGridLayout
 from keypad import *
-from calcFunctions import *
 
 
 class Button(QToolButton):
@@ -40,8 +39,8 @@ class Calculator(QWidget):
         buttonGroups = {
             'num': {'buttons':numPadList, 'layout': numLayout, 'columns': 3},
             'op': {'buttons': operatorList, 'layout': opLayout, 'columns': 2},
-            'constants': {'buttons': constantList, 'layout': constLayout, 'columns': 1},
-            'functions': {'buttons': functionLabels, 'layout': funcLayout, 'columns': 1}
+            'constants': {'buttons': constantMap.keys(), 'layout': constLayout, 'columns': 1},
+            'functions': {'buttons': functionMap.keys(), 'layout': funcLayout, 'columns': 1}
         }
 
         for label in buttonGroups.keys():
@@ -74,51 +73,42 @@ class Calculator(QWidget):
         self.setWindowTitle("My Calculator")
 
     def buttonClicked(self):
-        button = self.sender()
-        key = button.text()
+        result = self.calculatedResult(self.sender().text(), self.display.text())
 
-        errorList = ['ZeroDivisionErr', 'IndexErr', 'OverFlowErr',
-                     'TypeErr', 'ValueErr', 'SyntaxErr', 'etcErr']
-
-        if self.display.text() in errorList:
-            self.display.setText('')  # after error
-
-        if key == 'pi':
-            key = '3.141592'
-        elif key == '빛의 이동 속도 (m/s)':
-            key = '3E+8'
-        elif key == '소리의 이동 속도 (m/s)':
-            key = '340'
-        elif key == '태양과의 평균 거리 (km)':
-            key = '1.5E+8'
-
-        if key == '=':
-            try:
-                result = str(eval(self.display.text()))
-            except ZeroDivisionError:  # divided by 0
-                result = 'ZeroDivisionErr'
-            except IndexError:  # over/under indexing
-                result = 'IndexErr'
-            except OverflowError:  # overflow (could be memory err)
-                result = 'OverflowErr'
-            except TypeError:  # wrong arg (data type)
-                result = 'TypeErr'
-            except ValueError:  # wrong arg (ex. big number)
-                result = 'ValueErr'
-            except SyntaxError:
-                result = 'SyntaxErr'
-            except:
-                result = 'etcErr'
+        if result.find('Err') == -1:
             self.display.setText(result)
-        elif key == 'C':
-            self.display.setText('')
-        elif key in functionLabels:
-            index = functionLabels.index(key)
-            value = eval("%s(%s)" %(functions[index], self.display.text()))
-            self.display.setText(str(value))
+            self.repaint()
         else:
-            self.display.setText(self.display.text() + key)
-        self.repaint()
+            QMessageBox.about(self, "Invalid value", result)
+
+    def calculatedResult(self, buttonName, value):
+        result = ''
+        try:
+            if buttonName == '=':
+                result = str(eval(value))
+            elif buttonName in functionMap:
+                result = str(functionMap[buttonName](int(value)))
+            elif buttonName in constantMap:
+                result = value + constantMap[buttonName]
+            else:
+                result = value + buttonName
+            float(result)
+        except ZeroDivisionError:  # divided by 0
+            result = 'ZeroDivisionErr'
+        except IndexError:  # over/under indexing
+            result = 'IndexErr'
+        except OverflowError:  # overflow (could be memory err)
+            result = 'OverflowErr'
+        except TypeError:  # wrong arg (data type)
+            result = 'TypeErr'
+        except ValueError:  # wrong arg (ex. big number)
+            result = 'ValueErr'
+        except SyntaxError:
+            result = 'SyntaxErr'
+        except:
+            result = 'etcErr'
+
+        return result
 
 
 if __name__ == '__main__':
