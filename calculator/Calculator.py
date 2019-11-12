@@ -86,8 +86,11 @@ class Calculator(QWidget):
         try:
             if buttonName == '=':
                 result = str(eval(value))
+            elif buttonName == 'C':
+                return ''
             elif buttonName in functionMap:
-                result = str(functionMap[buttonName](int(value)))
+                result = str(functionMap[buttonName](value))
+                return result
             elif buttonName in constantMap:
                 result = value + constantMap[buttonName]
             else:

@@ -24,6 +24,7 @@ constantMap = {
 functionMap = {
     'factorial (!)': factorial,
     '-> binary': toBinary,
-    'binary -> dec':toDec,
-    '-> roman':toRoman
+    'binary -> dec': toDec,
+    'dec -> roman': decToRoman,
+    'roman -> dec': romanToDec
 }
