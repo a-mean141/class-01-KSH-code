@@ -17,6 +17,10 @@ def start():
             print('One character at a time!')
             continue
 
+        if entered_char >= 'a' and entered_char <= 'z':
+            print('Must enter alphabet')
+            continue
+
         entered_char = entered_char.lower()
         if entered_char in word.get_guessed_characters():
             print('You already entered \"' + entered_char + '\"')
