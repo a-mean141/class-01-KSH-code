@@ -65,11 +65,11 @@ class Handler:
                 return
             webbrowser.open_new(self.links[i])
             self.routes.append(self.links[i])
-            recomended_destinations = get_recomended_destinations(self.routes)
+            recomended_destinations = get_recomended_destinations(
+                set(self.routes), self.routes)
             if len(recomended_destinations) > 0:
                 reply = QMessageBox.question(self.widget, '추천 기사',
                                              '추천 기사가 있습니다. 확인하시겠어요?', QMessageBox.Yes, QMessageBox.No)
-
                 if reply == QMessageBox.Yes:
                     titles = []
                     for link in recomended_destinations:

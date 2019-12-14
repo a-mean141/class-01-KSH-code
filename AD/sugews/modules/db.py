@@ -27,7 +27,12 @@ def save_routes(routes):
         pickle.dump(data, f)
 
 
-def get_recomended_destinations(routes, data=None, result=set()):
+result = set()
+data = None
+
+
+def get_recomended_destinations(original_routes, routes):
+    global result, data
     if data == None:
         file_name = 'routes.data'
         data = {}
@@ -40,13 +45,18 @@ def get_recomended_destinations(routes, data=None, result=set()):
     for i in range(len(routes)):
         keys += routes[i]
     if keys in data:
-        for link in sorted(data[keys], key=lambda item: item[1]):
+        links = sorted(data[keys].items(), key=lambda item: item[1])
+        for (link, _count) in links:
             result.add(link)
+            result = result - original_routes
             if len(result) == 8:
                 break
     if len(result) == 8 or len(routes) == 1:
-        return list(result)
-    return get_recomended_destinations(routes[1:], data, result)
+        dd = list(result)
+        result = set()
+        data = None
+        return dd
+    return get_recomended_destinations(original_routes, routes[1:])
 
 
 def save_title(title, link):
