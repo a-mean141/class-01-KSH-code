@@ -16,6 +16,8 @@ class LifeTest(unittest.TestCase):
     def test_decrease(self):
         self.life.decrease()
         self.assertEqual(self.life.remaining_life, 5)
+        self.life.decrease()
+        self.assertEqual(self.life.remaining_life, 4)
 
 
 if __name__ == '__main__':
