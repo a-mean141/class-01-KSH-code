@@ -5,7 +5,7 @@ from PyQt5.QtCore import *
 import webbrowser
 
 
-class Index(QWidget):
+class Application(QWidget):
     def __init__(self):
         self.handler = Handler(self)
         super().__init__()
@@ -56,6 +56,6 @@ class Index(QWidget):
 
 
 app = QApplication(sys.argv)
-ex = Index()
+ex = Application()
 ex.show()
 sys.exit(app.exec_())
