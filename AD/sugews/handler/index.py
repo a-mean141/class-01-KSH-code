@@ -38,6 +38,8 @@ class Handler:
 
     def request(self, query):
         headers = {
+            'X-Naver-Client-Id': 'Enter your client ID',
+            'X-Naver-Client-Secret': 'Enter your client secret',
         }
         params = (
             ('query', urllib.parse.quote(query)),
